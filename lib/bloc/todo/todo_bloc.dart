@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject/bloc/todo_event.dart';
-import 'package:testproject/todo_model.dart';
+import 'package:testproject/bloc/todo/todo_event.dart';
+import 'package:testproject/models/todo_model.dart';
 
 import 'todo_state.dart';
 

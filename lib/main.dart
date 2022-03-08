@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject/bloc/todo_bloc.dart';
+import 'package:testproject/bloc/todo/todo_bloc.dart';
 
+import 'authentication.dart';
 import 'todo.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(BlocProvider(
+    create: (context) => TodoBloc(),
+    child: const TodoListApp(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class TodoListApp extends StatelessWidget {
+  const TodoListApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +22,53 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(title: 'TODO List App'),
+      routes: {
+        "/authentication": (context) => const AuthenticationPage(),
+        "/todo": (context) => const TodoPage(),
+      },
+      initialRoute: "/authentication",
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+////
+// Todo Classes
+////
+class TodoPage extends StatefulWidget {
+  const TodoPage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<TodoPage> createState() => _TodoPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final List<String> tasks = [];
-
+class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: const Text("TODO List App"),
         ),
-        body: BlocProvider(
-          create: (context) => TodoBloc(),
-          child: Todo(),
-        ));
+        body: const Todo());
+  }
+}
+
+////
+// Authentication Classes
+////
+class AuthenticationPage extends StatefulWidget {
+  const AuthenticationPage({Key? key}) : super(key: key);
+
+  @override
+  State<AuthenticationPage> createState() => _AuthenticationPageState();
+}
+
+class _AuthenticationPageState extends State<AuthenticationPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("TODO List App"),
+        ),
+        body: const Authentication());
   }
 }

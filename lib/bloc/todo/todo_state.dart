@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../todo_model.dart';
+import 'package:testproject/models/todo_model.dart';
 
 abstract class TodoState extends Equatable {
   final TodoModel todoModel;

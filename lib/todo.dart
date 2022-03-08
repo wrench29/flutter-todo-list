@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:testproject/bloc/todo_event.dart';
+import 'package:testproject/bloc/todo/todo_event.dart';
+import 'package:testproject/bloc/todo/todo_bloc.dart';
+import 'package:testproject/bloc/todo/todo_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// Debug
-import 'package:flutter/foundation.dart';
-
-import 'bloc/todo_bloc.dart';
-import 'bloc/todo_state.dart';
 
 class Todo extends StatefulWidget {
+  const Todo({Key? key}) : super(key: key);
+
   @override
   _TodoState createState() => _TodoState();
 }

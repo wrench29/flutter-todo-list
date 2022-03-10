@@ -7,49 +7,41 @@ import 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   TodoBloc() : super(const TodoInitial()) {
-    on<TodoEvent>((event, emitter) async => {
-          if (event is AddTodoPressed)
-            _onAddTodoPressed(event, emitter)
-          else if (event is RemoveTodoPressed)
-            _onRemoveTodoPressed(event, emitter)
-          else if (event is FetchTodos)
-            await _onFetchTodos(event, emitter)
-        });
+    on<AddTodoPressed>(_onAddTodoPressed);
+    on<RemoveTodoPressed>(_onRemoveTodoPressed);
+    on<FetchTodos>(_onFetchTodos);
   }
 
   Future<void> _onFetchTodos(
-      FetchTodos event, Emitter<TodoState> emitter) async {
-    await readContent().then((String value) => {
-          emitter(TodoChanged(state.todoModel.copyWith(
-              todoTexts: state.todoModel.todoTexts + value.split("\n"))))
-        });
+    FetchTodos event,
+    Emitter<TodoState> emitter,
+  ) async {
+    final content = await readContent();
+    final todoTexts = state.todoModel.todoTexts + content.split("\n");
+    emitter(TodoChanged(state.todoModel.copyWith(todoTexts: todoTexts)));
   }
 
   void _onAddTodoPressed(AddTodoPressed event, Emitter<TodoState> emitter) {
     if (event.text == "") {
-      emitter(state);
       return;
     }
 
     TodoModel newModel = state.todoModel
         .copyWith(todoTexts: state.todoModel.todoTexts + [event.text]);
-
     emitter(TodoChanged(newModel));
   }
 
   void _onRemoveTodoPressed(
-      RemoveTodoPressed event, Emitter<TodoState> emitter) {
+    RemoveTodoPressed event,
+    Emitter<TodoState> emitter,
+  ) {
     if (event.index >= state.todoModel.todoTexts.length) {
-      emitter(state);
       return;
     }
 
     List<String> newList = List.from(state.todoModel.todoTexts);
-
     newList.removeAt(event.index);
-
     TodoModel newModel = state.todoModel.copyWith(todoTexts: newList);
-
     emitter(TodoChanged(newModel));
   }
 }

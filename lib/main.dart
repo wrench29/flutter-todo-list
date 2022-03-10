@@ -2,14 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testproject/bloc/todo/todo_bloc.dart';
 import 'package:testproject/pages/pages.dart';
+import 'package:testproject/repos/todo_repo.dart';
 
 void main() {
-  runApp(
-    BlocProvider(
-      create: (context) => TodoBloc(),
-      child: const TodoListApp(),
-    ),
-  );
+  runApp(const AppProvider(child: TodoListApp()));
+}
+
+class AppProvider extends StatelessWidget {
+  final Widget child;
+
+  const AppProvider({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (_) => TodoRepository()),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => TodoBloc()),
+        ],
+        child: child,
+      ),
+    );
+  }
 }
 
 class TodoListApp extends StatelessWidget {

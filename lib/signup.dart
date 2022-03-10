@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
-class Authentication extends StatefulWidget {
-  const Authentication({Key? key}) : super(key: key);
+class Signup extends StatefulWidget {
+  const Signup({Key? key}) : super(key: key);
 
   @override
-  _AuthenticationState createState() => _AuthenticationState();
+  _SignupState createState() => _SignupState();
 }
 
-class _AuthenticationState extends State<Authentication> {
+class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
-    return const AuthenticationForm();
+    return const SignupForm();
+    //
   }
 }
 
-class AuthenticationForm extends StatelessWidget {
-  const AuthenticationForm({Key? key}) : super(key: key);
+class SignupForm extends StatelessWidget {
+  const SignupForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class AuthenticationForm extends StatelessWidget {
           child: TextFormField(
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              labelText: 'Your username',
+              labelText: 'New username',
             ),
           ),
         ),
@@ -40,7 +41,17 @@ class AuthenticationForm extends StatelessWidget {
           child: TextFormField(
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              labelText: 'Password',
+              labelText: 'New password',
+            ),
+            obscureText: true,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'New password confirm',
             ),
             obscureText: true,
           ),
@@ -50,7 +61,10 @@ class AuthenticationForm extends StatelessWidget {
             child: ElevatedButton(
                 onPressed: () =>
                     {Navigator.of(context).pushReplacementNamed("/todo")},
-                child: const Text("Go to app")))
+                child: const Text("Sign up"))),
+        const Padding(
+            child: Text("<Status>", style: TextStyle(fontSize: 16)),
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16)),
       ],
     );
   }

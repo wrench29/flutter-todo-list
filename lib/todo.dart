@@ -12,12 +12,12 @@ class Todo extends StatefulWidget {
 }
 
 class _TodoState extends State<Todo> {
-  final TextEditingController teController = TextEditingController();
-  final ScrollController scrlController = ScrollController();
+  final TextEditingController textEditingController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   _scrollDown() {
-    scrlController.animateTo(
-      scrlController.position.maxScrollExtent,
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
       duration: const Duration(seconds: 2),
       curve: Curves.fastOutSlowIn,
     );
@@ -35,7 +35,7 @@ class _TodoState extends State<Todo> {
       Expanded(
           child: BlocBuilder<TodoBloc, TodoState>(
               builder: (context, state) => ListView.builder(
-                  controller: scrlController,
+                  controller: scrollController,
                   shrinkWrap: true,
                   itemBuilder: (builder, index) {
                     return Card(
@@ -65,7 +65,7 @@ class _TodoState extends State<Todo> {
           child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             Expanded(
               child: TextFormField(
-                controller: teController,
+                controller: textEditingController,
                 autocorrect: false,
                 decoration: const InputDecoration(
                   labelText: "Add new task",
@@ -81,15 +81,21 @@ class _TodoState extends State<Todo> {
               iconSize: 32.0,
               onPressed: () {
                 String text;
-                if ((text = teController.text.trim()) != "") {
+                if ((text = textEditingController.text.trim()) != "") {
                   addTodoPressed(text);
-                  teController.text = "";
+                  textEditingController.text = "";
                   Future.delayed(const Duration(milliseconds: 10), _scrollDown);
                 }
               },
             )
           ])),
     ]);
+  }
+
+  @override
+  void initState() {
+    context.read<TodoBloc>().add(FetchTodos());
+    super.initState();
   }
 
   addTodoPressed(String text) {

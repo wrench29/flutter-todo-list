@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:testproject/components/custom_padding.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class SignupForm extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const CustomPadding(),
           child: TextFormField(
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
@@ -36,7 +37,7 @@ class SignupForm extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const CustomPadding(),
           child: TextFormField(
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
@@ -46,7 +47,7 @@ class SignupForm extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const CustomPadding(),
           child: TextFormField(
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
@@ -56,7 +57,7 @@ class SignupForm extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const CustomPadding(),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushReplacementNamed("/todo");

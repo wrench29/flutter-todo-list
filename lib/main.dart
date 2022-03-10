@@ -21,7 +21,9 @@ class AppProvider extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => TodoBloc()),
+          BlocProvider(
+            create: (context) => TodoBloc(context.read<TodoRepository>()),
+          ),
         ],
         child: child,
       ),

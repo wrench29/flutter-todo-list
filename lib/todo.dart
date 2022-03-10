@@ -27,42 +27,54 @@ class _TodoState extends State<Todo> {
   Widget build(BuildContext context) {
     return Column(children: [
       Container(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: const Text(
-            "TODO List:",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          )),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: const Text(
+          "TODO List:",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
       Expanded(
-          child: BlocBuilder<TodoBloc, TodoState>(
-              builder: (context, state) => ListView.builder(
-                  controller: scrollController,
-                  shrinkWrap: true,
-                  itemBuilder: (builder, index) {
-                    return Card(
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    child: Text(
-                                        "${index + 1}) ${state.todoModel.todoTexts[index]}",
-                                        style: const TextStyle(fontSize: 16))),
-                                IconButton(
-                                  alignment: Alignment.centerRight,
-                                  icon: const Icon(Icons.remove),
-                                  iconSize: 20.0,
-                                  onPressed: () {
-                                    removeTodoPressed(index);
-                                  },
-                                )
-                              ],
-                            )));
-                  },
-                  itemCount: state.todoModel.todoTexts.length))),
+        child: BlocBuilder<TodoBloc, TodoState>(
+          builder: (context, state) {
+            return ListView.builder(
+              controller: scrollController,
+              shrinkWrap: true,
+              itemBuilder: (builder, index) {
+                return Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "${index + 1}) ${state.todoModel.todoTexts[index]}",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        IconButton(
+                          alignment: Alignment.centerRight,
+                          icon: const Icon(Icons.remove),
+                          iconSize: 20.0,
+                          onPressed: () {
+                            removeTodoPressed(index);
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: state.todoModel.todoTexts.length,
+            );
+          },
+        ),
+      ),
       Container(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
             Expanded(
               child: TextFormField(
                 controller: textEditingController,
@@ -72,7 +84,8 @@ class _TodoState extends State<Todo> {
                   labelStyle: TextStyle(fontSize: 20.0, color: Colors.green),
                   fillColor: Colors.blue,
                   border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purpleAccent)),
+                    borderSide: BorderSide(color: Colors.purpleAccent),
+                  ),
                 ),
               ),
             ),
@@ -87,8 +100,10 @@ class _TodoState extends State<Todo> {
                   Future.delayed(const Duration(milliseconds: 10), _scrollDown);
                 }
               },
-            )
-          ])),
+            ),
+          ],
+        ),
+      ),
     ]);
   }
 

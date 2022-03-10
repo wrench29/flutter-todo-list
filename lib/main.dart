@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testproject/bloc/todo/todo_bloc.dart';
-import 'package:testproject/pages/auth_page.dart';
-import 'package:testproject/pages/signup_page.dart';
-import 'package:testproject/pages/todo_page.dart';
+import 'package:testproject/pages/pages.dart';
 
 void main() {
   runApp(

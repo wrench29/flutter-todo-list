@@ -8,10 +8,12 @@ import 'signup.dart';
 import 'todo.dart';
 
 void main() {
-  runApp(BlocProvider(
-    create: (context) => TodoBloc(),
-    child: const TodoListApp(),
-  ));
+  runApp(
+    BlocProvider(
+      create: (context) => TodoBloc(),
+      child: const TodoListApp(),
+    ),
+  );
 }
 
 class TodoListApp extends StatelessWidget {
@@ -48,10 +50,11 @@ class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("TODO List App"),
-        ),
-        body: const Todo());
+      appBar: AppBar(
+        title: const Text("TODO List App"),
+      ),
+      body: const Todo(),
+    );
   }
 }
 
@@ -69,10 +72,11 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("TODO List App"),
-        ),
-        body: const Authentication());
+      appBar: AppBar(
+        title: const Text("TODO List App"),
+      ),
+      body: const Authentication(),
+    );
   }
 }
 
@@ -90,9 +94,10 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("TODO List App"),
-        ),
-        body: const Signup());
+      appBar: AppBar(
+        title: const Text("TODO List App"),
+      ),
+      body: const Signup(),
+    );
   }
 }

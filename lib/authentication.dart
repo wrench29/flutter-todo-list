@@ -23,9 +23,9 @@ class AuthenticationForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const Padding(
-            child:
-                Text("Log in your account: ", style: TextStyle(fontSize: 16)),
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16)),
+          child: Text("Log in your account: ", style: TextStyle(fontSize: 16)),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextFormField(
@@ -46,11 +46,14 @@ class AuthenticationForm extends StatelessWidget {
           ),
         ),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: ElevatedButton(
-                onPressed: () =>
-                    {Navigator.of(context).pushReplacementNamed("/todo")},
-                child: const Text("Go to app")))
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed("/todo");
+            },
+            child: const Text("Go to app"),
+          ),
+        )
       ],
     );
   }

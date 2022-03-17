@@ -32,6 +32,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
 
     todoRepository.addTodoModel(TodoModel(todoText: event.text));
+    todoRepository.writeTodoListToMemory();
     emitter(TodoChanged(todoRepository.getTodoModelsList()));
   }
 
@@ -44,7 +45,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
 
     todoRepository.removeTodoModel(event.index);
-
+    todoRepository.writeTodoListToMemory();
     emitter(TodoChanged(todoRepository.getTodoModelsList()));
   }
 }

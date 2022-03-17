@@ -48,7 +48,7 @@ class _TodoState extends State<Todo> {
                       children: [
                         Expanded(
                           child: Text(
-                            "${index + 1}) ${state.todoModel.todoTexts[index]}",
+                            "${index + 1}) ${state.todoModelsList[index]}",
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
@@ -65,7 +65,7 @@ class _TodoState extends State<Todo> {
                   ),
                 );
               },
-              itemCount: state.todoModel.todoTexts.length,
+              itemCount: state.todoModelsList.length,
             );
           },
         ),

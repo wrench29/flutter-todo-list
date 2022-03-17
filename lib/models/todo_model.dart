@@ -1,14 +1,15 @@
 import 'package:equatable/equatable.dart';
 
 class TodoModel extends Equatable {
-  const TodoModel({this.todoTexts = const []});
+  const TodoModel({this.todoText = ""});
 
-  final List<String> todoTexts;
+  final String todoText;
 
-  TodoModel copyWith({List<String>? todoTexts}) {
-    return TodoModel(todoTexts: todoTexts ?? []);
+  @override
+  String toString() {
+    return todoText;
   }
 
   @override
-  List<Object> get props => [todoTexts];
+  List<Object> get props => [todoText];
 }

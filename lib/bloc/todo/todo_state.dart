@@ -3,21 +3,22 @@ import 'package:equatable/equatable.dart';
 import 'package:testproject/models/todo_model.dart';
 
 abstract class TodoState extends Equatable {
-  final TodoModel todoModel;
+  final List<TodoModel> todoModelsList;
 
-  const TodoState({required this.todoModel});
+  const TodoState({required this.todoModelsList});
 
   @override
-  List<Object> get props => [todoModel];
+  List<Object> get props => todoModelsList;
 }
 
 class TodoInitial extends TodoState {
-  const TodoInitial() : super(todoModel: const TodoModel());
+  const TodoInitial() : super(todoModelsList: const []);
 }
 
 class TodoChanged extends TodoState {
-  const TodoChanged(TodoModel todoModel) : super(todoModel: todoModel);
+  const TodoChanged(List<TodoModel> todoModelsList)
+      : super(todoModelsList: todoModelsList);
 
   @override
-  List<Object> get props => [todoModel];
+  List<Object> get props => todoModelsList;
 }

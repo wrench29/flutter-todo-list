@@ -14,7 +14,7 @@ class TodoRepository {
   }
 
   void removeTodoModel(int index) {
-    if (index < _todoList.length) {
+    if (index > _todoList.length) {
       throw RangeError("Trying to access undefined member of _todoList");
     }
     _todoList.removeAt(index);

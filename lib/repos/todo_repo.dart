@@ -3,26 +3,36 @@ import 'package:path_provider/path_provider.dart';
 import 'package:testproject/models/todo_model.dart';
 
 class TodoRepository {
-  final List<TodoModel> _todoList = [];
+  final Map<String, List<TodoModel>> _mapTodoLists = {};
 
-  List<TodoModel> getTodoModelsList() {
-    return [..._todoList];
-  }
-
-  void addTodoModel(TodoModel todoModel) {
-    _todoList.add(todoModel);
-  }
-
-  void removeTodoModel(int index) {
-    if (index > _todoList.length) {
-      throw RangeError("Trying to access undefined member of _todoList");
+  List<TodoModel> getTodoModelsList(String account) {
+    if (_mapTodoLists[account] == null) {
+      return [];
     }
-    _todoList.removeAt(index);
+    return [..._mapTodoLists[account]!];
   }
 
-  Future<void> readFromMemoryAndInitialize() async {
+  void addTodoModel(String account, TodoModel todoModel) {
+    if (_mapTodoLists[account] == null) {
+      return;
+    }
+    _mapTodoLists[account]!.add(todoModel);
+  }
+
+  void removeTodoModel(String account, int index) {
+    if (_mapTodoLists[account] == null) {
+      return;
+    }
+    if (index > _mapTodoLists[account]!.length) {
+      throw RangeError("Trying to access undefined member of todoList");
+    }
+    _mapTodoLists[account]!.removeAt(index);
+  }
+
+  Future<void> readFromMemoryAndInitialize(String account) async {
     final directory = await getApplicationDocumentsDirectory();
-    final file = File("${directory.path}/todos.txt");
+    final file = File("${directory.path}/todos_$account.txt");
+    _mapTodoLists[account] = [];
     if (!file.existsSync()) {
       return;
     }
@@ -36,18 +46,18 @@ class TodoRepository {
       return;
     }
     for (String todo in todoTexts) {
-      _todoList.add(TodoModel(todoText: todo));
+      _mapTodoLists[account]!.add(TodoModel(todoText: todo));
     }
   }
 
-  Future<void> writeTodoListToMemory() async {
+  Future<void> writeTodoListToMemory(String account) async {
     final directory = await getApplicationDocumentsDirectory();
-    var file = File("${directory.path}/todos.txt");
+    var file = File("${directory.path}/todos_$account.txt");
     if (!file.existsSync()) {
       file = await file.create();
     }
     var sink = file.openWrite();
-    for (TodoModel todoModel in _todoList) {
+    for (TodoModel todoModel in _mapTodoLists[account]!) {
       sink.writeln(todoModel.toString());
     }
     sink.close();

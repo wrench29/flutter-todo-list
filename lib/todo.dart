@@ -3,6 +3,7 @@ import 'package:testproject/bloc/todo/todo_event.dart';
 import 'package:testproject/bloc/todo/todo_bloc.dart';
 import 'package:testproject/bloc/todo/todo_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testproject/repos/auth_repo.dart';
 
 class Todo extends StatefulWidget {
   const Todo({Key? key}) : super(key: key);
@@ -109,15 +110,19 @@ class _TodoState extends State<Todo> {
 
   @override
   void initState() {
-    context.read<TodoBloc>().add(FetchTodos());
+    context.read<TodoBloc>().add(
+        FetchTodos(account: context.read<AuthRepository>().getCurrentUser()));
     super.initState();
   }
 
   addTodoPressed(String text) {
-    context.read<TodoBloc>().add(AddTodoPressed(text: text));
+    context.read<TodoBloc>().add(AddTodoPressed(
+        account: context.read<AuthRepository>().getCurrentUser(), text: text));
   }
 
   removeTodoPressed(int index) {
-    context.read<TodoBloc>().add(RemoveTodoPressed(index: index));
+    context.read<TodoBloc>().add(RemoveTodoPressed(
+        account: context.read<AuthRepository>().getCurrentUser(),
+        index: index));
   }
 }

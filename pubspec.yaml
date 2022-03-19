@@ -49,6 +49,7 @@ dev_dependencies:
   flutter_bloc: ^8.0.1
   fluttertoast: ^8.0.9
   path_provider: ^2.0.9
+  dbcrypt: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testproject/bloc/signup/signup_bloc.dart';
 import 'package:testproject/bloc/todo/todo_bloc.dart';
 import 'package:testproject/pages/pages.dart';
+import 'package:testproject/repos/auth_repo.dart';
 import 'package:testproject/repos/todo_repo.dart';
+
+import 'bloc/auth/auth_bloc.dart';
 
 void main() {
   runApp(const AppProvider(child: TodoListApp()));
@@ -18,11 +22,18 @@ class AppProvider extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (_) => TodoRepository()),
+        RepositoryProvider(create: (_) => AuthRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (context) => TodoBloc(context.read<TodoRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => SignupBloc(context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => AuthBloc(context.read<AuthRepository>()),
           ),
         ],
         child: child,
@@ -46,7 +57,7 @@ class TodoListApp extends StatelessWidget {
         "/signup": (context) => const SignupPage(),
         "/todo": (context) => const TodoPage(),
       },
-      initialRoute: "/signup",
+      initialRoute: "/authentication",
     );
   }
 }

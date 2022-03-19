@@ -63,7 +63,7 @@ class SignupForm extends StatelessWidget {
         children: <Widget>[
           const Padding(
             child:
-                Text("Log in your account: ", style: TextStyle(fontSize: 16)),
+                Text("Sign up a new account: ", style: TextStyle(fontSize: 16)),
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           ),
           Padding(

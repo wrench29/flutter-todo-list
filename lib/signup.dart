@@ -57,7 +57,11 @@ class SignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignupBloc, SignupState>(builder: (context, state) {
+    return BlocConsumer<SignupBloc, SignupState>(listener: (context, state) {
+      if (state.authModel.responseType == AuthResponseType.successSigningUp) {
+        Navigator.of(context).pushReplacementNamed("/authentication");
+      }
+    }, builder: (context, state) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -105,7 +109,6 @@ class SignupForm extends StatelessWidget {
                 if (state.authModel.responseType ==
                     AuthResponseType.successChecking) {
                   _onSignUpButtonClicked();
-                  Navigator.of(context).pushReplacementNamed("/authentication");
                 }
               },
               child: const Text("Sign up"),

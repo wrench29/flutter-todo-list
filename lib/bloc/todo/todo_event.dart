@@ -5,9 +5,7 @@ abstract class TodoEvent extends Equatable {
 }
 
 class FetchTodos extends TodoEvent {
-  final String account;
-
-  const FetchTodos({required this.account});
+  const FetchTodos();
 
   @override
   List<Object> get props => [];
@@ -15,10 +13,8 @@ class FetchTodos extends TodoEvent {
 
 class AddTodoPressed extends TodoEvent {
   final String text;
-  final String account;
 
-  const AddTodoPressed({required this.account, required this.text})
-      : assert(text != "");
+  const AddTodoPressed({required this.text}) : assert(text != "");
 
   @override
   List<Object> get props => [text];
@@ -26,10 +22,8 @@ class AddTodoPressed extends TodoEvent {
 
 class RemoveTodoPressed extends TodoEvent {
   final int index;
-  final String account;
 
-  const RemoveTodoPressed({required this.account, required this.index})
-      : assert(index >= 0);
+  const RemoveTodoPressed({required this.index}) : assert(index >= 0);
 
   @override
   List<Object> get props => [index];

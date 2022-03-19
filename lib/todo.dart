@@ -26,103 +26,97 @@ class _TodoState extends State<Todo> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: const Text(
-          "TODO List:",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    return BlocBuilder<TodoBloc, TodoState>(builder: (context, state) {
+      return Column(children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            "TODO List (Account: ${state.username})",
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      Expanded(
-        child: BlocBuilder<TodoBloc, TodoState>(
-          builder: (context, state) {
-            return ListView.builder(
-              controller: scrollController,
-              shrinkWrap: true,
-              itemBuilder: (builder, index) {
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "${index + 1}) ${state.todoModelsList[index]}",
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        IconButton(
-                          alignment: Alignment.centerRight,
-                          icon: const Icon(Icons.remove),
-                          iconSize: 20.0,
-                          onPressed: () {
-                            removeTodoPressed(index);
-                          },
-                        )
-                      ],
+        Expanded(
+            child: ListView.builder(
+          controller: scrollController,
+          shrinkWrap: true,
+          itemBuilder: (builder, index) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "${index + 1}) ${state.todoModelsList[index]}",
+                        style: const TextStyle(fontSize: 16),
+                      ),
                     ),
-                  ),
-                );
-              },
-              itemCount: state.todoModelsList.length,
+                    IconButton(
+                      alignment: Alignment.centerRight,
+                      icon: const Icon(Icons.remove),
+                      iconSize: 20.0,
+                      onPressed: () {
+                        removeTodoPressed(index);
+                      },
+                    )
+                  ],
+                ),
+              ),
             );
           },
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 2.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: textEditingController,
-                autocorrect: false,
-                decoration: const InputDecoration(
-                  labelText: "Add new task",
-                  labelStyle: TextStyle(fontSize: 20.0, color: Colors.green),
-                  fillColor: Colors.blue,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.purpleAccent),
+          itemCount: state.todoModelsList.length,
+        )),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: textEditingController,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    labelText: "Add new task",
+                    labelStyle: TextStyle(fontSize: 20.0, color: Colors.green),
+                    fillColor: Colors.blue,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.purpleAccent),
+                    ),
                   ),
                 ),
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              iconSize: 32.0,
-              onPressed: () {
-                String text;
-                if ((text = textEditingController.text.trim()) != "") {
-                  addTodoPressed(text);
-                  textEditingController.text = "";
-                  Future.delayed(const Duration(milliseconds: 10), _scrollDown);
-                }
-              },
-            ),
-          ],
+              IconButton(
+                icon: const Icon(Icons.add_circle_outline),
+                iconSize: 32.0,
+                onPressed: () {
+                  String text;
+                  if ((text = textEditingController.text.trim()) != "") {
+                    addTodoPressed(text);
+                    textEditingController.text = "";
+                    Future.delayed(
+                        const Duration(milliseconds: 10), _scrollDown);
+                  }
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-    ]);
+      ]);
+    });
   }
 
   @override
   void initState() {
-    context.read<TodoBloc>().add(
-        FetchTodos(account: context.read<AuthRepository>().getCurrentUser()));
+    context.read<TodoBloc>().add(const FetchTodos());
     super.initState();
   }
 
   addTodoPressed(String text) {
-    context.read<TodoBloc>().add(AddTodoPressed(
-        account: context.read<AuthRepository>().getCurrentUser(), text: text));
+    context.read<TodoBloc>().add(AddTodoPressed(text: text));
   }
 
   removeTodoPressed(int index) {
-    context.read<TodoBloc>().add(RemoveTodoPressed(
-        account: context.read<AuthRepository>().getCurrentUser(),
-        index: index));
+    context.read<TodoBloc>().add(RemoveTodoPressed(index: index));
   }
 }

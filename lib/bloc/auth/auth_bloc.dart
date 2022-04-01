@@ -34,10 +34,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         AuthResponseModel(responseType: AuthResponseType.successChecking)));
   }
 
-  void _onAuthInAccount(
+  Future<void> _onAuthInAccount(
     AuthInAccount event,
     Emitter<AuthState> emitter,
-  ) {
+  ) async {
     String passwordHash = authRepository.getPasswordHash(event.username);
     if (passwordHash != "" && DBCrypt().checkpw(event.password, passwordHash)) {
       authRepository.setCurrentUser(event.username);

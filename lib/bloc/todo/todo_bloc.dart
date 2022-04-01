@@ -29,6 +29,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       emitter(TodoChanged(const [], authRepository.getCurrentUser()));
       return;
     }
+    emitter(const TodoInitial());
+
     emitter(TodoChanged(
         todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
         authRepository.getCurrentUser()));

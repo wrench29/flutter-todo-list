@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:testproject/components/custom_padding.dart';
 import 'package:testproject/bloc/signup/signup_event.dart';
 import 'package:testproject/bloc/signup/signup_bloc.dart';
 import 'package:testproject/bloc/signup/signup_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testproject/models/auth_response_model.dart';
 
 class Signup extends StatefulWidget {

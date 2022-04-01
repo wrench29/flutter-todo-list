@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:testproject/components/custom_padding.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:testproject/components/custom_padding.dart';
 import 'package:testproject/bloc/auth/auth_event.dart';
 import 'package:testproject/bloc/auth/auth_bloc.dart';
 import 'package:testproject/bloc/auth/auth_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testproject/models/auth_response_model.dart';
 
 class Authentication extends StatefulWidget {

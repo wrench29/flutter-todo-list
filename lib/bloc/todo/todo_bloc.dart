@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:testproject/bloc/todo/todo_event.dart';
+import 'package:testproject/bloc/todo/todo_state.dart';
 import 'package:testproject/models/todo_model.dart';
 import 'package:testproject/repos/auth_repo.dart';
 import 'package:testproject/repos/todo_repo.dart';
-
-import 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   TodoRepository todoRepository;

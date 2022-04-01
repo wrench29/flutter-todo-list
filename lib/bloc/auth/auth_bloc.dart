@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dbcrypt/dbcrypt.dart';
+
 import 'package:testproject/bloc/auth/auth_event.dart';
 import 'package:testproject/models/auth_response_model.dart';
 import 'package:testproject/repos/auth_repo.dart';
-import 'package:dbcrypt/dbcrypt.dart';
-
-import 'auth_state.dart';
+import 'package:testproject/bloc/auth/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthRepository authRepository;

@@ -14,7 +14,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("TODO List App"),
+        title: const Text("Sign in"),
       ),
       body: const Authentication(),
     );

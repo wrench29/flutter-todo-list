@@ -14,7 +14,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("TODO List App"),
+        title: const Text("Sign Up"),
       ),
       body: const Signup(),
     );

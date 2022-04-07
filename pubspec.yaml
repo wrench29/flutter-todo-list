@@ -50,6 +50,7 @@ dev_dependencies:
   fluttertoast: ^8.0.9
   path_provider: ^2.0.9
   dbcrypt: ^2.0.0
+  flutter_colorpicker: ^1.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

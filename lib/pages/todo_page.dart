@@ -15,6 +15,15 @@ class _TodoPageState extends State<TodoPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("TODO List App"),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/categories");
+                  },
+                  child: const Icon(Icons.more_vert)))
+        ],
       ),
       body: const Todo(),
     );

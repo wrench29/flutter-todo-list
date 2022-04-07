@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testproject/bloc/category/category_bloc.dart';
 
 import 'package:testproject/bloc/signup/signup_bloc.dart';
 import 'package:testproject/bloc/todo/todo_bloc.dart';
 import 'package:testproject/bloc/auth/auth_bloc.dart';
 import 'package:testproject/repos/auth_repo.dart';
+import 'package:testproject/repos/category_repo.dart';
 import 'package:testproject/repos/todo_repo.dart';
 import 'package:testproject/pages/pages.dart';
 
@@ -22,6 +24,7 @@ class AppProvider extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (_) => TodoRepository()),
+        RepositoryProvider(create: (_) => CategoryRepository()),
         RepositoryProvider(create: (_) => AuthRepository()),
       ],
       child: MultiBlocProvider(
@@ -36,6 +39,11 @@ class AppProvider extends StatelessWidget {
           BlocProvider(
             create: (context) => AuthBloc(context.read<AuthRepository>()),
           ),
+          BlocProvider(
+            create: (context) => CategoryBloc(
+                context.read<CategoryRepository>(),
+                context.read<AuthRepository>()),
+          )
         ],
         child: child,
       ),
@@ -58,6 +66,7 @@ class TodoListApp extends StatelessWidget {
         "/authentication": (context) => const AuthenticationPage(),
         "/signup": (context) => const SignupPage(),
         "/todo": (context) => const TodoPage(),
+        "/categories": (context) => const CategoriesPage(),
         "/loading": (context) => const LoadingPage()
       },
       initialRoute: "/initial",

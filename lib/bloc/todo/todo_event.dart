@@ -13,8 +13,9 @@ class FetchTodos extends TodoEvent {
 
 class AddTodoPressed extends TodoEvent {
   final String text;
+  final int categoryId;
 
-  const AddTodoPressed({required this.text}) : assert(text != "");
+  const AddTodoPressed({required this.text, required this.categoryId});
 
   @override
   List<Object> get props => [text];

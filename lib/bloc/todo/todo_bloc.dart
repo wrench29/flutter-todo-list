@@ -4,13 +4,15 @@ import 'package:testproject/bloc/todo/todo_event.dart';
 import 'package:testproject/bloc/todo/todo_state.dart';
 import 'package:testproject/models/todo_model.dart';
 import 'package:testproject/repos/auth_repo.dart';
+import 'package:testproject/repos/category_repo.dart';
 import 'package:testproject/repos/todo_repo.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   TodoRepository todoRepository;
   AuthRepository authRepository;
+  CategoryRepository categoryRepository;
 
-  TodoBloc(this.todoRepository, this.authRepository)
+  TodoBloc(this.todoRepository, this.authRepository, this.categoryRepository)
       : super(const TodoInitial()) {
     on<AddTodoPressed>(_onAddTodoPressed);
     on<RemoveTodoPressed>(_onRemoveTodoPressed);
@@ -23,17 +25,23 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   ) async {
     await todoRepository
         .readFromMemoryAndInitialize(authRepository.getCurrentUser());
+    await categoryRepository
+        .readFromMemoryAndInitialize(authRepository.getCurrentUser());
     if (todoRepository
         .getTodoModelsList(authRepository.getCurrentUser())
         .isEmpty) {
-      emitter(TodoChanged(const [], authRepository.getCurrentUser()));
+      emitter(TodoChanged(
+          const [],
+          authRepository.getCurrentUser(),
+          categoryRepository
+              .getCategoryModelsList(authRepository.getCurrentUser())));
       return;
     }
-    emitter(const TodoInitial());
-
     emitter(TodoChanged(
         todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser()));
+        authRepository.getCurrentUser(),
+        categoryRepository
+            .getCategoryModelsList(authRepository.getCurrentUser())));
   }
 
   void _onAddTodoPressed(AddTodoPressed event, Emitter<TodoState> emitter) {
@@ -41,12 +49,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       return;
     }
 
-    todoRepository.addTodoModel(
-        authRepository.getCurrentUser(), TodoModel(todoText: event.text));
+    todoRepository.addTodoModel(authRepository.getCurrentUser(),
+        TodoModel(todoText: event.text, categoryId: event.categoryId));
     todoRepository.writeTodoListToMemory(authRepository.getCurrentUser());
     emitter(TodoChanged(
         todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser()));
+        authRepository.getCurrentUser(),
+        categoryRepository
+            .getCategoryModelsList(authRepository.getCurrentUser())));
   }
 
   void _onRemoveTodoPressed(
@@ -65,6 +75,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     todoRepository.writeTodoListToMemory(authRepository.getCurrentUser());
     emitter(TodoChanged(
         todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser()));
+        authRepository.getCurrentUser(),
+        categoryRepository
+            .getCategoryModelsList(authRepository.getCurrentUser())));
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:testproject/models/todo_model.dart';
@@ -30,6 +31,27 @@ class TodoRepository {
     _mapTodoLists[account]!.removeAt(index);
   }
 
+  // Future<void> readFromMemoryAndInitialize(String account) async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   final file = File("${directory.path}/todos_$account.txt");
+  //   _mapTodoLists[account] = [];
+  //   if (!file.existsSync()) {
+  //     return;
+  //   }
+  //   final todoTexts = file.readAsLinesSync();
+  //   for (int i = todoTexts.length - 1; i >= 0; i--) {
+  //     if (todoTexts[i].trim() == "") {
+  //       todoTexts.removeAt(i);
+  //     }
+  //   }
+  //   if (todoTexts.isEmpty) {
+  //     return;
+  //   }
+  //   for (String todo in todoTexts) {
+  //     _mapTodoLists[account]!.add(TodoModel(todoText: todo));
+  //   }
+  // }
+
   Future<void> readFromMemoryAndInitialize(String account) async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File("${directory.path}/todos_$account.txt");
@@ -37,17 +59,15 @@ class TodoRepository {
     if (!file.existsSync()) {
       return;
     }
-    final todoTexts = file.readAsLinesSync();
-    for (int i = todoTexts.length - 1; i >= 0; i--) {
-      if (todoTexts[i].trim() == "") {
-        todoTexts.removeAt(i);
-      }
-    }
+    final todoTexts = await file.readAsString();
     if (todoTexts.isEmpty) {
       return;
     }
-    for (String todo in todoTexts) {
-      _mapTodoLists[account]!.add(TodoModel(todoText: todo));
+
+    final readJson = jsonDecode(todoTexts);
+
+    for (final todo in readJson) {
+      _mapTodoLists[account]!.add(TodoModel.fromJson(todo));
     }
   }
 
@@ -58,9 +78,24 @@ class TodoRepository {
       file = await file.create();
     }
     var sink = file.openWrite();
-    for (TodoModel todoModel in _mapTodoLists[account]!) {
-      sink.writeln(todoModel.toString());
+    final List<Map<String, dynamic>> todoListToJson = [];
+    for (final todoElement in _mapTodoLists[account]!) {
+      todoListToJson.add(TodoModel.toJson(todoElement));
     }
+    sink.writeln(jsonEncode(todoListToJson));
     sink.close();
   }
+
+  // Future<void> writeTodoListToMemory(String account) async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   var file = File("${directory.path}/todos_$account.txt");
+  //   if (!file.existsSync()) {
+  //     file = await file.create();
+  //   }
+  //   var sink = file.openWrite();
+  //   for (TodoModel todoModel in _mapTodoLists[account]!) {
+  //     sink.writeln(todoModel.toString());
+  //   }
+  //   sink.close();
+  // }
 }

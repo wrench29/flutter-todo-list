@@ -31,7 +31,9 @@ class AppProvider extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => TodoBloc(
-                context.read<TodoRepository>(), context.read<AuthRepository>()),
+                context.read<TodoRepository>(),
+                context.read<AuthRepository>(),
+                context.read<CategoryRepository>()),
           ),
           BlocProvider(
             create: (context) => SignupBloc(context.read<AuthRepository>()),

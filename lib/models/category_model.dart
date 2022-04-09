@@ -12,5 +12,5 @@ class CategoryModel extends Equatable {
   final Color color;
 
   @override
-  List<Object> get props => [categoryName, color];
+  List<Object> get props => [id, categoryName, color];
 }

@@ -1,10 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-class TodoModel extends Equatable {
+class TodoModel extends Equatable with Comparable<TodoModel> {
   const TodoModel({this.todoText = "", required this.categoryId});
 
   final String todoText;
   final int categoryId;
+
+  @override
+  int compareTo(TodoModel other) => todoText.compareTo(other.todoText);
 
   TodoModel.fromJson(Map<String, dynamic> json)
       : todoText = json['todoText'],
@@ -14,5 +17,5 @@ class TodoModel extends Equatable {
       {'todoText': value.todoText, 'categoryId': value.categoryId};
 
   @override
-  List<Object> get props => [todoText];
+  List<Object> get props => [todoText, categoryId];
 }

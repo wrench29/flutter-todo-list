@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:testproject/bloc/todo/todo_event.dart';
@@ -12,11 +13,18 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   AuthRepository authRepository;
   CategoryRepository categoryRepository;
 
+  String _searchFilter;
+
   TodoBloc(this.todoRepository, this.authRepository, this.categoryRepository)
-      : super(const TodoInitial()) {
+      : _searchFilter = "",
+        super(const TodoInitial()) {
     on<AddTodoPressed>(_onAddTodoPressed);
     on<RemoveTodoPressed>(_onRemoveTodoPressed);
     on<FetchTodos>(_onFetchTodos);
+    on<UpdateCategories>(_onUpdateCategories);
+    on<SortByCategory>(_sortByCategory);
+    on<SortByText>(_sortByText);
+    on<SetSearchFilter>(_setSearchFilter);
   }
 
   Future<void> _onFetchTodos(
@@ -37,11 +45,11 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
               .getCategoryModelsList(authRepository.getCurrentUser())));
       return;
     }
-    emitter(TodoChanged(
-        todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser(),
-        categoryRepository
-            .getCategoryModelsList(authRepository.getCurrentUser())));
+    _emitDefault(emitter);
+  }
+
+  void _onUpdateCategories(UpdateCategories event, Emitter<TodoState> emitter) {
+    _emitDefault(emitter);
   }
 
   void _onAddTodoPressed(AddTodoPressed event, Emitter<TodoState> emitter) {
@@ -52,11 +60,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     todoRepository.addTodoModel(authRepository.getCurrentUser(),
         TodoModel(todoText: event.text, categoryId: event.categoryId));
     todoRepository.writeTodoListToMemory(authRepository.getCurrentUser());
-    emitter(TodoChanged(
-        todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser(),
-        categoryRepository
-            .getCategoryModelsList(authRepository.getCurrentUser())));
+    _emitDefault(emitter);
   }
 
   void _onRemoveTodoPressed(
@@ -73,8 +77,51 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     todoRepository.removeTodoModel(
         authRepository.getCurrentUser(), event.index);
     todoRepository.writeTodoListToMemory(authRepository.getCurrentUser());
+    _emitDefault(emitter);
+  }
+
+  void _sortByCategory(
+    SortByCategory event,
+    Emitter<TodoState> emitter,
+  ) {
+    todoRepository.sortByCategories(authRepository.getCurrentUser());
+    _emitDefault(emitter);
+  }
+
+  void _sortByText(
+    SortByText event,
+    Emitter<TodoState> emitter,
+  ) {
+    todoRepository.sortByText(authRepository.getCurrentUser());
+    _emitDefault(emitter);
+  }
+
+  void _setSearchFilter(SetSearchFilter event, Emitter<TodoState> emitter) {
+    _searchFilter = event.searchText;
+    _emitDefault(emitter);
+  }
+
+  List<TodoModel> _filterTodos(List<TodoModel> list, String searchText) {
+    List<TodoModel> newList = [];
+
+    if (searchText == "") {
+      return list;
+    }
+
+    for (final model in list) {
+      if (model.todoText.contains(searchText)) {
+        newList.add(model);
+      }
+    }
+
+    return [...newList];
+  }
+
+  void _emitDefault(Emitter<TodoState> emitter) {
     emitter(TodoChanged(
-        todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
+        _filterTodos(
+            todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
+            _searchFilter),
         authRepository.getCurrentUser(),
         categoryRepository
             .getCategoryModelsList(authRepository.getCurrentUser())));

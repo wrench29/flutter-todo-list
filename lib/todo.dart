@@ -17,9 +17,22 @@ class Todo extends StatefulWidget {
 }
 
 class _TodoState extends State<Todo> {
-  final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController taskTEController = TextEditingController();
+  final TextEditingController searchTEController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   int selectedCategoryId = -1;
+
+  _TodoState() {
+    searchTEController.addListener(() {
+      String searchText = searchTEController.text.trim();
+      context.read<TodoBloc>().add(SetSearchFilter(searchText: searchText));
+    });
+  }
+
+  _resetSearch() {
+    searchTEController.clear();
+    context.read<TodoBloc>().add(const SetSearchFilter(searchText: ""));
+  }
 
   _scrollDown() {
     scrollController.animateTo(
@@ -40,6 +53,18 @@ class _TodoState extends State<Todo> {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
+        TextFormField(
+          controller: searchTEController,
+          autocorrect: false,
+          decoration: const InputDecoration(
+            labelText: "Search...",
+            labelStyle: TextStyle(fontSize: 12.0, color: Colors.green),
+            fillColor: Colors.blue,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.purpleAccent),
+            ),
+          ),
+        ),
         Expanded(
             child: ListView.builder(
           controller: scrollController,
@@ -51,25 +76,35 @@ class _TodoState extends State<Todo> {
                   .color,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "${index + 1}) ${state.todoModelsList[index].todoText}",
-                        style: const TextStyle(fontSize: 16),
+                child: Column(children: [
+                  Text(
+                    state
+                        .categoryModelsList[
+                            state.todoModelsList[index].categoryId]
+                        .categoryName,
+                    style: const TextStyle(
+                        fontSize: 12, fontStyle: FontStyle.italic),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          state.todoModelsList[index].todoText,
+                          style: const TextStyle(fontSize: 16),
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      alignment: Alignment.centerRight,
-                      icon: const Icon(Icons.remove),
-                      iconSize: 20.0,
-                      onPressed: () {
-                        removeTodoPressed(index);
-                      },
-                    )
-                  ],
-                ),
+                      IconButton(
+                        alignment: Alignment.centerRight,
+                        icon: const Icon(Icons.remove),
+                        iconSize: 20.0,
+                        onPressed: () {
+                          removeTodoPressed(index);
+                        },
+                      )
+                    ],
+                  ),
+                ]),
               ),
             );
           },
@@ -82,7 +117,7 @@ class _TodoState extends State<Todo> {
             children: [
               Expanded(
                 child: TextFormField(
-                  controller: textEditingController,
+                  controller: taskTEController,
                   autocorrect: false,
                   decoration: const InputDecoration(
                     labelText: "Add new task",
@@ -106,10 +141,10 @@ class _TodoState extends State<Todo> {
                 iconSize: 32.0,
                 onPressed: () {
                   String text;
-                  if ((text = textEditingController.text.trim()) != "" &&
+                  if ((text = taskTEController.text.trim()) != "" &&
                       selectedCategoryId > -1) {
                     addTodoPressed(text, selectedCategoryId);
-                    textEditingController.text = "";
+                    taskTEController.text = "";
                     Future.delayed(
                         const Duration(milliseconds: 10), _scrollDown);
                   }
@@ -129,12 +164,14 @@ class _TodoState extends State<Todo> {
   }
 
   addTodoPressed(String text, int categoryId) {
+    _resetSearch();
     context
         .read<TodoBloc>()
         .add(AddTodoPressed(text: text, categoryId: categoryId));
   }
 
   removeTodoPressed(int index) {
+    _resetSearch();
     context.read<TodoBloc>().add(RemoveTodoPressed(index: index));
   }
 
@@ -187,31 +224,6 @@ class _TodoState extends State<Todo> {
                             ),
                           ),
                         );
-                        // GestureDetector(
-                        //   onTap: () => {
-                        //     // TODO: Fix that motherfucking piece of fuck
-                        //     selectedCategoryId =
-                        //         state.categoryModelsList[index].id
-                        //   },
-                        //   child: Card(
-                        //     color: state.categoryModelsList[index].color,
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.all(8.0),
-                        //       child: Row(
-                        //         mainAxisAlignment: MainAxisAlignment.start,
-                        //         children: [
-                        //           Expanded(
-                        //             child: Text(
-                        //               state.categoryModelsList[index]
-                        //                   .categoryName,
-                        //               style: const TextStyle(fontSize: 16),
-                        //             ),
-                        //           )
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // );
                       },
                       itemCount: state.categoryModelsList.length,
                     ),

@@ -5,6 +5,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:testproject/bloc/category/category_event.dart';
 import 'package:testproject/bloc/category/category_bloc.dart';
 import 'package:testproject/bloc/category/category_state.dart';
+import 'package:testproject/bloc/todo/todo_bloc.dart';
+import 'package:testproject/bloc/todo/todo_event.dart';
 
 class Categories extends StatefulWidget {
   const Categories({Key? key}) : super(key: key);
@@ -114,6 +116,13 @@ class _CategoriesState extends State<Categories> {
         ),
       ]);
     });
+  }
+
+  @override
+  void deactivate() {
+    context.read<TodoBloc>().add(const UpdateCategories());
+
+    super.deactivate();
   }
 
   @override

@@ -24,7 +24,7 @@ abstract class TodoState extends Equatable {
   }
 
   @override
-  List<Object> get props => todoModelsList;
+  List<Object> get props => [todoModelsList, username, categoryModelsList];
 }
 
 class TodoInitial extends TodoState {
@@ -44,5 +44,5 @@ class TodoChanged extends TodoState {
             categoryModelsList: categoryModelsList);
 
   @override
-  List<Object> get props => todoModelsList;
+  List<Object> get props => [todoModelsList, username, categoryModelsList];
 }

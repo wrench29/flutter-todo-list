@@ -44,7 +44,8 @@ class AppProvider extends StatelessWidget {
           BlocProvider(
             create: (context) => CategoryBloc(
                 context.read<CategoryRepository>(),
-                context.read<AuthRepository>()),
+                context.read<AuthRepository>(),
+                context.read<TodoRepository>()),
           )
         ],
         child: child,

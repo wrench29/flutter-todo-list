@@ -4,12 +4,15 @@ import 'package:testproject/bloc/category/category_event.dart';
 import 'package:testproject/bloc/category/category_state.dart';
 import 'package:testproject/repos/auth_repo.dart';
 import 'package:testproject/repos/category_repo.dart';
+import 'package:testproject/repos/todo_repo.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryRepository categoryRepository;
   AuthRepository authRepository;
+  TodoRepository todoRepository;
 
-  CategoryBloc(this.categoryRepository, this.authRepository)
+  CategoryBloc(
+      this.categoryRepository, this.authRepository, this.todoRepository)
       : super(const CategoryInitial()) {
     on<AddCategoryPressed>(_onAddCategoryPressed);
     on<RemoveCategoryPressed>(_onRemoveCategoryPressed);
@@ -20,16 +23,12 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     FetchCategories event,
     Emitter<CategoryState> emitter,
   ) async {
-    await categoryRepository
-        .readFromMemoryAndInitialize(authRepository.getCurrentUser());
     if (categoryRepository
         .getCategoryModelsList(authRepository.getCurrentUser())
         .isEmpty) {
       emitter(CategoryChanged(const [], authRepository.getCurrentUser()));
       return;
     }
-    emitter(const CategoryInitial());
-
     emitter(CategoryChanged(
         categoryRepository
             .getCategoryModelsList(authRepository.getCurrentUser()),

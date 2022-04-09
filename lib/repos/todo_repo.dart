@@ -31,26 +31,24 @@ class TodoRepository {
     _mapTodoLists[account]!.removeAt(index);
   }
 
-  // Future<void> readFromMemoryAndInitialize(String account) async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   final file = File("${directory.path}/todos_$account.txt");
-  //   _mapTodoLists[account] = [];
-  //   if (!file.existsSync()) {
-  //     return;
-  //   }
-  //   final todoTexts = file.readAsLinesSync();
-  //   for (int i = todoTexts.length - 1; i >= 0; i--) {
-  //     if (todoTexts[i].trim() == "") {
-  //       todoTexts.removeAt(i);
-  //     }
-  //   }
-  //   if (todoTexts.isEmpty) {
-  //     return;
-  //   }
-  //   for (String todo in todoTexts) {
-  //     _mapTodoLists[account]!.add(TodoModel(todoText: todo));
-  //   }
-  // }
+  void sortByCategories(String currentAccount) {
+    final todoList = _mapTodoLists[currentAccount]!;
+
+    for (int i = 0; i < todoList.length - 1; i++) {
+      for (int j = 0; j < todoList.length - i - 1; j++) {
+        if (todoList[j].categoryId < todoList[j + 1].categoryId) {
+          TodoModel temp = todoList[j];
+          todoList[j] = todoList[j + 1];
+          todoList[j + 1] = temp;
+        }
+      }
+    }
+  }
+
+  void sortByText(String currentAccount) {
+    final todoList = _mapTodoLists[currentAccount]!;
+    todoList.sort();
+  }
 
   Future<void> readFromMemoryAndInitialize(String account) async {
     final directory = await getApplicationDocumentsDirectory();
@@ -85,17 +83,4 @@ class TodoRepository {
     sink.writeln(jsonEncode(todoListToJson));
     sink.close();
   }
-
-  // Future<void> writeTodoListToMemory(String account) async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   var file = File("${directory.path}/todos_$account.txt");
-  //   if (!file.existsSync()) {
-  //     file = await file.create();
-  //   }
-  //   var sink = file.openWrite();
-  //   for (TodoModel todoModel in _mapTodoLists[account]!) {
-  //     sink.writeln(todoModel.toString());
-  //   }
-  //   sink.close();
-  // }
 }

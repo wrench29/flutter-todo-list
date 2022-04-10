@@ -23,48 +23,36 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     FetchCategories event,
     Emitter<CategoryState> emitter,
   ) async {
-    if (categoryRepository
-        .getCategoryModelsList(authRepository.getCurrentUser())
-        .isEmpty) {
-      emitter(CategoryChanged(const [], authRepository.getCurrentUser()));
+    final user = authRepository.getCurrentUser();
+    final categoryModelsList = categoryRepository.getCategoryModelsList(user);
+    if (categoryModelsList.isEmpty) {
+      emitter(CategoryChanged(const [], user));
       return;
     }
-    emitter(CategoryChanged(
-        categoryRepository
-            .getCategoryModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser()));
+    emitter(CategoryChanged(categoryModelsList, user));
   }
 
   void _onAddCategoryPressed(
       AddCategoryPressed event, Emitter<CategoryState> emitter) {
-    categoryRepository.addCategoryModel(
-        authRepository.getCurrentUser(), event.name, event.color);
-    categoryRepository
-        .writeCategoryListToMemory(authRepository.getCurrentUser());
-    emitter(CategoryChanged(
-        categoryRepository
-            .getCategoryModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser()));
+    final user = authRepository.getCurrentUser();
+    categoryRepository.addCategoryModel(user, event.name, event.color);
+    categoryRepository.writeCategoryListToMemory(user);
+    emitter(
+        CategoryChanged(categoryRepository.getCategoryModelsList(user), user));
   }
 
   void _onRemoveCategoryPressed(
     RemoveCategoryPressed event,
     Emitter<CategoryState> emitter,
   ) {
-    if (event.index >=
-        categoryRepository
-            .getCategoryModelsList(authRepository.getCurrentUser())
-            .length) {
+    final user = authRepository.getCurrentUser();
+    final categoryModelsList = categoryRepository.getCategoryModelsList(user);
+    if (event.index >= categoryModelsList.length) {
       return;
     }
 
-    categoryRepository.removeCategoryModel(
-        authRepository.getCurrentUser(), event.index);
-    categoryRepository
-        .writeCategoryListToMemory(authRepository.getCurrentUser());
-    emitter(CategoryChanged(
-        categoryRepository
-            .getCategoryModelsList(authRepository.getCurrentUser()),
-        authRepository.getCurrentUser()));
+    categoryRepository.removeCategoryModel(user, event.index);
+    categoryRepository.writeCategoryListToMemory(user);
+    emitter(CategoryChanged(categoryModelsList, user));
   }
 }

@@ -31,18 +31,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     FetchTodos event,
     Emitter<TodoState> emitter,
   ) async {
-    await todoRepository
-        .readFromMemoryAndInitialize(authRepository.getCurrentUser());
-    await categoryRepository
-        .readFromMemoryAndInitialize(authRepository.getCurrentUser());
-    if (todoRepository
-        .getTodoModelsList(authRepository.getCurrentUser())
-        .isEmpty) {
+    final user = authRepository.getCurrentUser();
+    await todoRepository.readFromMemoryAndInitialize(user);
+    await categoryRepository.readFromMemoryAndInitialize(user);
+    final todoModelsList = todoRepository.getTodoModelsList(user);
+    if (todoModelsList.isEmpty) {
       emitter(TodoChanged(
-          const [],
-          authRepository.getCurrentUser(),
-          categoryRepository
-              .getCategoryModelsList(authRepository.getCurrentUser())));
+          const [], user, categoryRepository.getCategoryModelsList(user)));
       return;
     }
     _emitDefault(emitter);
@@ -56,10 +51,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     if (event.text == "") {
       return;
     }
-
-    todoRepository.addTodoModel(authRepository.getCurrentUser(),
-        TodoModel(todoText: event.text, categoryId: event.categoryId));
-    todoRepository.writeTodoListToMemory(authRepository.getCurrentUser());
+    final user = authRepository.getCurrentUser();
+    todoRepository.addTodoModel(
+        user, TodoModel(todoText: event.text, categoryId: event.categoryId));
+    todoRepository.writeTodoListToMemory(user);
     _emitDefault(emitter);
   }
 
@@ -67,16 +62,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     RemoveTodoPressed event,
     Emitter<TodoState> emitter,
   ) {
-    if (event.index >=
-        todoRepository
-            .getTodoModelsList(authRepository.getCurrentUser())
-            .length) {
+    final user = authRepository.getCurrentUser();
+    final todoModelsList = todoRepository.getTodoModelsList(user);
+    if (event.index >= todoModelsList.length) {
       return;
     }
 
-    todoRepository.removeTodoModel(
-        authRepository.getCurrentUser(), event.index);
-    todoRepository.writeTodoListToMemory(authRepository.getCurrentUser());
+    todoRepository.removeTodoModel(user, event.index);
+    todoRepository.writeTodoListToMemory(user);
     _emitDefault(emitter);
   }
 
@@ -118,12 +111,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   }
 
   void _emitDefault(Emitter<TodoState> emitter) {
+    final user = authRepository.getCurrentUser();
     emitter(TodoChanged(
-        _filterTodos(
-            todoRepository.getTodoModelsList(authRepository.getCurrentUser()),
-            _searchFilter),
-        authRepository.getCurrentUser(),
-        categoryRepository
-            .getCategoryModelsList(authRepository.getCurrentUser())));
+        _filterTodos(todoRepository.getTodoModelsList(user), _searchFilter),
+        user,
+        categoryRepository.getCategoryModelsList(user)));
   }
 }

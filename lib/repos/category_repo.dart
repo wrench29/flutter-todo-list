@@ -21,24 +21,22 @@ class CategoryRepository {
       return;
     }
     int newId = 0;
-    if (_mapCategoryLists[account]!.isNotEmpty) {
-      newId =
-          _mapCategoryLists[account]![_mapCategoryLists[account]!.length - 1]
-                  .id +
-              1;
+    final list = _mapCategoryLists[account]!;
+    if (list.isNotEmpty) {
+      newId = list[_mapCategoryLists[account]!.length - 1].id + 1;
     }
-    _mapCategoryLists[account]!
-        .add(CategoryModel(categoryName: name, color: color, id: newId));
+    list.add(CategoryModel(categoryName: name, color: color, id: newId));
   }
 
   void removeCategoryModel(String account, int index) {
-    if (_mapCategoryLists[account] == null) {
+    var listOrNull = _mapCategoryLists[account];
+    if (listOrNull == null) {
       return;
     }
-    if (index > _mapCategoryLists[account]!.length) {
+    if (index > listOrNull.length) {
       throw RangeError("Trying to access undefined member of categoryList");
     }
-    _mapCategoryLists[account]!.removeAt(index);
+    listOrNull.removeAt(index);
   }
 
   Future<void> readFromMemoryAndInitialize(String account) async {
@@ -58,12 +56,13 @@ class CategoryRepository {
       return;
     }
     int id = 0;
-    for (String categoryRawLine in categoryRawLines) {
+    for (final categoryRawLine in categoryRawLines) {
       List<String> category = categoryRawLine.split(".");
-      String categoryName = category[0];
-      Color categoryColor = HexColor.fromHex(category[1]);
       _mapCategoryLists[account]!.add(CategoryModel(
-          categoryName: categoryName, color: categoryColor, id: id));
+        categoryName: category[0],
+        color: HexColor.fromHex(category[1]),
+        id: id,
+      ));
       id++;
     }
   }
@@ -74,11 +73,11 @@ class CategoryRepository {
     if (!file.existsSync()) {
       file = await file.create();
     }
-    var sink = file.openWrite();
+    final sink = file.openWrite();
     for (CategoryModel categoryModel in _mapCategoryLists[account]!) {
-      String categoryLine =
-          "${categoryModel.categoryName}.${categoryModel.color.toHex()}";
-      sink.writeln(categoryLine);
+      sink.writeln(
+        "${categoryModel.categoryName}.${categoryModel.color.toHex()}",
+      );
     }
     sink.close();
   }

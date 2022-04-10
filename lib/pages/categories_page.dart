@@ -32,7 +32,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 child: Text(
                   "TODO Categories (Account: ${state.username})",
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Expanded(
@@ -80,8 +82,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         autocorrect: false,
                         decoration: const InputDecoration(
                           labelText: "Add new category",
-                          labelStyle:
-                              TextStyle(fontSize: 20.0, color: Colors.green),
+                          labelStyle: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.green,
+                          ),
                           fillColor: Colors.blue,
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.purpleAccent),
@@ -100,16 +104,19 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       icon: const Icon(Icons.add),
                       iconSize: 32.0,
                       onPressed: () {
-                        String text;
-                        if ((text = textEditingController.text.trim()) == "") {
+                        final text = textEditingController.text.trim();
+                        if (text.isEmpty) {
                           Fluttertoast.showToast(
-                              msg: "Category name cannot be empty.");
+                            msg: "Category name cannot be empty.",
+                          );
                           return;
                         }
                         addCategoryPressed(text, selectedColor);
                         textEditingController.text = "";
                         Future.delayed(
-                            const Duration(milliseconds: 10), _scrollDown);
+                          const Duration(milliseconds: 10),
+                          _scrollDown,
+                        );
                       },
                     ),
                   ],
@@ -122,8 +129,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
     );
   }
 
-  final TextEditingController textEditingController = TextEditingController();
-  final ScrollController scrollController = ScrollController();
+  final textEditingController = TextEditingController();
+  final scrollController = ScrollController();
   Color selectedColor = Colors.white;
 
   _scrollDown() {
@@ -159,26 +166,27 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   selectColor() {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Pick a color!'),
-            content: SingleChildScrollView(
-              child: ColorPicker(
-                pickerColor: Colors.white,
-                onColorChanged: (color) => {selectedColor = color},
-                enableAlpha: false,
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color!'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: Colors.white,
+              onColorChanged: (color) => {selectedColor = color},
+              enableAlpha: false,
             ),
-            actions: <Widget>[
-              ElevatedButton(
-                child: const Text('Got it'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Got it'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

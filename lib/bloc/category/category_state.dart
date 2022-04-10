@@ -6,8 +6,10 @@ abstract class CategoryState extends Equatable {
   final List<CategoryModel> categoryModelsList;
   final String username;
 
-  const CategoryState(
-      {required this.categoryModelsList, required this.username});
+  const CategoryState({
+    required this.categoryModelsList,
+    required this.username,
+  });
 
   @override
   List<Object> get props => categoryModelsList;
@@ -18,8 +20,10 @@ class CategoryInitial extends CategoryState {
 }
 
 class CategoryChanged extends CategoryState {
-  const CategoryChanged(List<CategoryModel> categoryModelsList, String username)
-      : super(categoryModelsList: categoryModelsList, username: username);
+  const CategoryChanged(
+    List<CategoryModel> categoryModelsList,
+    String username,
+  ) : super(categoryModelsList: categoryModelsList, username: username);
 
   @override
   List<Object> get props => categoryModelsList;

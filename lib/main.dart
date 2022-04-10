@@ -31,9 +31,10 @@ class AppProvider extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => TodoBloc(
-                context.read<TodoRepository>(),
-                context.read<AuthRepository>(),
-                context.read<CategoryRepository>()),
+              context.read<TodoRepository>(),
+              context.read<AuthRepository>(),
+              context.read<CategoryRepository>(),
+            ),
           ),
           BlocProvider(
             create: (context) => SignupBloc(context.read<AuthRepository>()),
@@ -43,9 +44,10 @@ class AppProvider extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => CategoryBloc(
-                context.read<CategoryRepository>(),
-                context.read<AuthRepository>(),
-                context.read<TodoRepository>()),
+              context.read<CategoryRepository>(),
+              context.read<AuthRepository>(),
+              context.read<TodoRepository>(),
+            ),
           )
         ],
         child: child,

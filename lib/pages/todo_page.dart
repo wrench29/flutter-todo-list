@@ -21,27 +21,33 @@ class _TodoPageState extends State<TodoPage> {
         title: const Text("TODO List App"),
         actions: [
           Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed("/categories");
-                    context.read<TodoBloc>().add(const UpdateCategories());
-                  },
-                  child: const Icon(Icons.more_vert))),
+            padding: const EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/categories");
+                context.read<TodoBloc>().add(const UpdateCategories());
+              },
+              child: const Icon(Icons.more_vert),
+            ),
+          ),
           Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                  onTap: () {
-                    context.read<TodoBloc>().add(const SortByCategory());
-                  },
-                  child: const Icon(Icons.sort))),
+            padding: const EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                context.read<TodoBloc>().add(const SortByCategory());
+              },
+              child: const Icon(Icons.sort),
+            ),
+          ),
           Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                  onTap: () {
-                    context.read<TodoBloc>().add(const SortByText());
-                  },
-                  child: const Icon(Icons.abc))),
+            padding: const EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                context.read<TodoBloc>().add(const SortByText());
+              },
+              child: const Icon(Icons.abc),
+            ),
+          ),
         ],
       ),
       body: BlocBuilder<TodoBloc, TodoState>(
@@ -53,7 +59,9 @@ class _TodoPageState extends State<TodoPage> {
                 child: Text(
                   "TODO List (Account: ${state.username})",
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               TextFormField(
@@ -87,7 +95,9 @@ class _TodoPageState extends State<TodoPage> {
                                     state.todoModelsList[index].categoryId]
                                 .categoryName,
                             style: const TextStyle(
-                                fontSize: 12, fontStyle: FontStyle.italic),
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -126,8 +136,10 @@ class _TodoPageState extends State<TodoPage> {
                         autocorrect: false,
                         decoration: const InputDecoration(
                           labelText: "Add new task",
-                          labelStyle:
-                              TextStyle(fontSize: 20.0, color: Colors.green),
+                          labelStyle: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.green,
+                          ),
                           fillColor: Colors.blue,
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.purpleAccent),
@@ -146,22 +158,25 @@ class _TodoPageState extends State<TodoPage> {
                       icon: const Icon(Icons.add),
                       iconSize: 32.0,
                       onPressed: () {
-                        String text;
-                        if ((text = taskTEController.text.trim()) == "") {
+                        final text = taskTEController.text.trim();
+                        if (text.isEmpty) {
                           Fluttertoast.showToast(
-                              msg: "Todo text cannot be empty.");
+                            msg: "Todo text cannot be empty.",
+                          );
                           return;
                         }
                         if (selectedCategoryId == -1) {
                           Fluttertoast.showToast(
-                              msg: "You must select the category.");
+                            msg: "You must select the category.",
+                          );
                           return;
                         }
-
                         addTodoPressed(text, selectedCategoryId);
                         taskTEController.text = "";
                         Future.delayed(
-                            const Duration(milliseconds: 10), _scrollDown);
+                          const Duration(milliseconds: 10),
+                          _scrollDown,
+                        );
                       },
                     ),
                   ],
@@ -174,9 +189,9 @@ class _TodoPageState extends State<TodoPage> {
     );
   }
 
-  final TextEditingController taskTEController = TextEditingController();
-  final TextEditingController searchTEController = TextEditingController();
-  final ScrollController scrollController = ScrollController();
+  final taskTEController = TextEditingController();
+  final searchTEController = TextEditingController();
+  final scrollController = ScrollController();
   int selectedCategoryId = -1;
 
   _TodoPageState() {
@@ -223,7 +238,7 @@ class _TodoPageState extends State<TodoPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Select a category:'),
-          content: Container(
+          content: SizedBox(
             height: 400,
             width: 200,
             child: SingleChildScrollView(
@@ -234,8 +249,10 @@ class _TodoPageState extends State<TodoPage> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: const Text(
                       "Categories: ",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   ListView.builder(
@@ -244,11 +261,12 @@ class _TodoPageState extends State<TodoPage> {
                     itemBuilder: (builder, index) {
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: state.categoryModelsList[index].color),
-                        onPressed: () => {
+                          primary: state.categoryModelsList[index].color,
+                        ),
+                        onPressed: () {
                           selectedCategoryId =
-                              state.categoryModelsList[index].id,
-                          Navigator.of(context).pop()
+                              state.categoryModelsList[index].id;
+                          Navigator.pop(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

@@ -43,8 +43,8 @@ class InitialForm extends StatelessWidget {
               },
               child: const Text("Sign up a new account"),
               style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.green)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+              ),
             ),
           ),
           Padding(
@@ -55,8 +55,8 @@ class InitialForm extends StatelessWidget {
               },
               child: const Text("Log into an existing account"),
               style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.green)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+              ),
             ),
           )
         ],

@@ -18,20 +18,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ValidateInput event,
     Emitter<AuthState> emitter,
   ) {
-    if (event.username.trim() == "") {
-      emitter(const AuthChanged(AuthResponseModel(
+    if (event.username.trim().isEmpty) {
+      emitter(const AuthChanged(
+        AuthResponseModel(
           responseType: AuthResponseType.error,
-          errorMessage: "Username cannot be empty.")));
+          errorMessage: "Username cannot be empty.",
+        ),
+      ));
       return;
     }
-    if (event.password == "") {
+    if (event.password.isEmpty) {
       emitter(const AuthChanged(AuthResponseModel(
-          responseType: AuthResponseType.error,
-          errorMessage: "Password cannot be empty.")));
+        responseType: AuthResponseType.error,
+        errorMessage: "Password cannot be empty.",
+      )));
       return;
     }
-    emitter(const AuthChanged(
-        AuthResponseModel(responseType: AuthResponseType.successChecking)));
+    emitter(const AuthChanged(AuthResponseModel(
+      responseType: AuthResponseType.successChecking,
+    )));
   }
 
   Future<void> _onAuthInAccount(
@@ -39,14 +44,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emitter,
   ) async {
     String passwordHash = authRepository.getPasswordHash(event.username);
-    if (passwordHash != "" && DBCrypt().checkpw(event.password, passwordHash)) {
+    if (DBCrypt().checkpw(event.password, passwordHash)) {
       authRepository.setCurrentUser(event.username);
-      emitter(const AuthChanged(
-          AuthResponseModel(responseType: AuthResponseType.successAuth)));
+      emitter(const AuthChanged(AuthResponseModel(
+        responseType: AuthResponseType.successAuth,
+      )));
       return;
     }
     emitter(const AuthChanged(AuthResponseModel(
-        responseType: AuthResponseType.error,
-        errorMessage: "Wrong username or/and password.")));
+      responseType: AuthResponseType.error,
+      errorMessage: "Wrong username or/and password.",
+    )));
   }
 }

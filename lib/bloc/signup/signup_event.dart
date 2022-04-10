@@ -9,10 +9,11 @@ class ValidateAccount extends SignupEvent {
   final String password;
   final String confirmPassword;
 
-  const ValidateAccount(
-      {required this.username,
-      required this.password,
-      required this.confirmPassword});
+  const ValidateAccount({
+    required this.username,
+    required this.password,
+    required this.confirmPassword,
+  });
 
   @override
   List<Object> get props => [username, password];
@@ -23,10 +24,11 @@ class SignUpAccount extends SignupEvent {
   final String password;
   final String confirmPassword;
 
-  const SignUpAccount(
-      {required this.username,
-      required this.password,
-      required this.confirmPassword});
+  const SignUpAccount({
+    required this.username,
+    required this.password,
+    required this.confirmPassword,
+  });
 
   @override
   List<Object> get props => [username, password];

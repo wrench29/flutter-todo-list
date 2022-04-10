@@ -30,18 +30,22 @@ abstract class TodoState extends Equatable {
 class TodoInitial extends TodoState {
   const TodoInitial()
       : super(
-            todoModelsList: const [],
-            username: "",
-            categoryModelsList: const []);
+          todoModelsList: const [],
+          username: "",
+          categoryModelsList: const [],
+        );
 }
 
 class TodoChanged extends TodoState {
-  const TodoChanged(List<TodoModel> todoModelsList, String username,
-      List<CategoryModel> categoryModelsList)
-      : super(
-            todoModelsList: todoModelsList,
-            username: username,
-            categoryModelsList: categoryModelsList);
+  const TodoChanged(
+    List<TodoModel> todoModelsList,
+    String username,
+    List<CategoryModel> categoryModelsList,
+  ) : super(
+          todoModelsList: todoModelsList,
+          username: username,
+          categoryModelsList: categoryModelsList,
+        );
 
   @override
   List<Object> get props => [todoModelsList, username, categoryModelsList];

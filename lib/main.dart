@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject/bloc/category/category_bloc.dart';
 
+import 'package:testproject/bloc/category/category_bloc.dart';
 import 'package:testproject/bloc/signup/signup_bloc.dart';
 import 'package:testproject/bloc/todo/todo_bloc.dart';
 import 'package:testproject/bloc/auth/auth_bloc.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:testproject/bloc/category/category_event.dart';
 import 'package:testproject/bloc/category/category_bloc.dart';
@@ -35,38 +36,39 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 ),
               ),
               Expanded(
-                  child: ListView.builder(
-                controller: scrollController,
-                shrinkWrap: true,
-                itemBuilder: (builder, index) {
-                  return Card(
-                    color: state.categoryModelsList[index].color,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              state.categoryModelsList[index].categoryName,
-                              style: const TextStyle(fontSize: 16),
+                child: ListView.builder(
+                  controller: scrollController,
+                  shrinkWrap: true,
+                  itemBuilder: (builder, index) {
+                    return Card(
+                      color: state.categoryModelsList[index].color,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                state.categoryModelsList[index].categoryName,
+                                style: const TextStyle(fontSize: 16),
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            alignment: Alignment.centerRight,
-                            icon: const Icon(Icons.remove),
-                            iconSize: 20.0,
-                            onPressed: () {
-                              removeCategoryPressed(index);
-                            },
-                          )
-                        ],
+                            IconButton(
+                              alignment: Alignment.centerRight,
+                              icon: const Icon(Icons.remove),
+                              iconSize: 20.0,
+                              onPressed: () {
+                                removeCategoryPressed(index);
+                              },
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-                itemCount: state.categoryModelsList.length,
-              )),
+                    );
+                  },
+                  itemCount: state.categoryModelsList.length,
+                ),
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2.0),
                 child: Row(
@@ -99,12 +101,15 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       iconSize: 32.0,
                       onPressed: () {
                         String text;
-                        if ((text = textEditingController.text.trim()) != "") {
-                          addCategoryPressed(text, selectedColor);
-                          textEditingController.text = "";
-                          Future.delayed(
-                              const Duration(milliseconds: 10), _scrollDown);
+                        if ((text = textEditingController.text.trim()) == "") {
+                          Fluttertoast.showToast(
+                              msg: "Category name cannot be empty.");
+                          return;
                         }
+                        addCategoryPressed(text, selectedColor);
+                        textEditingController.text = "";
+                        Future.delayed(
+                            const Duration(milliseconds: 10), _scrollDown);
                       },
                     ),
                   ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:testproject/bloc/todo/todo_event.dart';
 import 'package:testproject/bloc/todo/todo_bloc.dart';
@@ -68,50 +69,52 @@ class _TodoPageState extends State<TodoPage> {
                 ),
               ),
               Expanded(
-                  child: ListView.builder(
-                controller: scrollController,
-                shrinkWrap: true,
-                itemBuilder: (builder, index) {
-                  return Card(
-                    color: state
-                        .getCategoryById(state.todoModelsList[index].categoryId)
-                        .color,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(children: [
-                        Text(
-                          state
-                              .categoryModelsList[
-                                  state.todoModelsList[index].categoryId]
-                              .categoryName,
-                          style: const TextStyle(
-                              fontSize: 12, fontStyle: FontStyle.italic),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                state.todoModelsList[index].todoText,
-                                style: const TextStyle(fontSize: 16),
+                child: ListView.builder(
+                  controller: scrollController,
+                  shrinkWrap: true,
+                  itemBuilder: (builder, index) {
+                    return Card(
+                      color: state
+                          .getCategoryById(
+                              state.todoModelsList[index].categoryId)
+                          .color,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(children: [
+                          Text(
+                            state
+                                .categoryModelsList[
+                                    state.todoModelsList[index].categoryId]
+                                .categoryName,
+                            style: const TextStyle(
+                                fontSize: 12, fontStyle: FontStyle.italic),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  state.todoModelsList[index].todoText,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              alignment: Alignment.centerRight,
-                              icon: const Icon(Icons.remove),
-                              iconSize: 20.0,
-                              onPressed: () {
-                                removeTodoPressed(index);
-                              },
-                            )
-                          ],
-                        ),
-                      ]),
-                    ),
-                  );
-                },
-                itemCount: state.todoModelsList.length,
-              )),
+                              IconButton(
+                                alignment: Alignment.centerRight,
+                                icon: const Icon(Icons.remove),
+                                iconSize: 20.0,
+                                onPressed: () {
+                                  removeTodoPressed(index);
+                                },
+                              )
+                            ],
+                          ),
+                        ]),
+                      ),
+                    );
+                  },
+                  itemCount: state.todoModelsList.length,
+                ),
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2.0),
                 child: Row(
@@ -144,13 +147,21 @@ class _TodoPageState extends State<TodoPage> {
                       iconSize: 32.0,
                       onPressed: () {
                         String text;
-                        if ((text = taskTEController.text.trim()) != "" &&
-                            selectedCategoryId > -1) {
-                          addTodoPressed(text, selectedCategoryId);
-                          taskTEController.text = "";
-                          Future.delayed(
-                              const Duration(milliseconds: 10), _scrollDown);
+                        if ((text = taskTEController.text.trim()) == "") {
+                          Fluttertoast.showToast(
+                              msg: "Todo text cannot be empty.");
+                          return;
                         }
+                        if (selectedCategoryId == -1) {
+                          Fluttertoast.showToast(
+                              msg: "You must select the category.");
+                          return;
+                        }
+
+                        addTodoPressed(text, selectedCategoryId);
+                        taskTEController.text = "";
+                        Future.delayed(
+                            const Duration(milliseconds: 10), _scrollDown);
                       },
                     ),
                   ],
@@ -168,7 +179,7 @@ class _TodoPageState extends State<TodoPage> {
   final ScrollController scrollController = ScrollController();
   int selectedCategoryId = -1;
 
-  _TodoState() {
+  _TodoPageState() {
     searchTEController.addListener(() {
       String searchText = searchTEController.text.trim();
       context.read<TodoBloc>().add(SetSearchFilter(searchText: searchText));
@@ -208,59 +219,61 @@ class _TodoPageState extends State<TodoPage> {
 
   selectCategory(TodoState state) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Select a category:'),
-            content: Container(
-                height: 400,
-                width: 200,
-                child: SingleChildScrollView(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Categories: ",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select a category:'),
+          content: Container(
+            height: 400,
+            width: 200,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: const Text(
+                      "Categories: ",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    ListView.builder(
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      itemBuilder: (builder, index) {
-                        return ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: state.categoryModelsList[index].color),
-                          onPressed: () => {
-                            selectedCategoryId =
-                                state.categoryModelsList[index].id,
-                            Navigator.of(context).pop()
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    state
-                                        .categoryModelsList[index].categoryName,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                )
-                              ],
-                            ),
+                  ),
+                  ListView.builder(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    itemBuilder: (builder, index) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: state.categoryModelsList[index].color),
+                        onPressed: () => {
+                          selectedCategoryId =
+                              state.categoryModelsList[index].id,
+                          Navigator.of(context).pop()
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  state.categoryModelsList[index].categoryName,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              )
+                            ],
                           ),
-                        );
-                      },
-                      itemCount: state.categoryModelsList.length,
-                    ),
-                  ],
-                ))),
-          );
-        });
+                        ),
+                      );
+                    },
+                    itemCount: state.categoryModelsList.length,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

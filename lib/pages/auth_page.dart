@@ -56,61 +56,64 @@ class AuthenticationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
-      if (state.authModel.responseType == AuthResponseType.successAuth) {
-        Navigator.of(context).pushReplacementNamed("/todo");
-      }
-    }, builder: (context, state) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const Padding(
-            child:
-                Text("Log in your account: ", style: TextStyle(fontSize: 16)),
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          ),
-          Padding(
-            padding: const CustomPadding(),
-            child: TextFormField(
-              controller: usernameTEController,
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Your username',
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.authModel.responseType == AuthResponseType.successAuth) {
+          Navigator.of(context).pushReplacementNamed("/todo");
+        }
+      },
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            const Padding(
+              child:
+                  Text("Log in your account: ", style: TextStyle(fontSize: 16)),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            ),
+            Padding(
+              padding: const CustomPadding(),
+              child: TextFormField(
+                controller: usernameTEController,
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  labelText: 'Your username',
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const CustomPadding(),
-            child: TextFormField(
-              controller: passwordTEController,
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Password',
+            Padding(
+              padding: const CustomPadding(),
+              child: TextFormField(
+                controller: passwordTEController,
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  labelText: 'Password',
+                ),
+                obscureText: true,
               ),
-              obscureText: true,
             ),
-          ),
-          Padding(
-            padding: const CustomPadding(),
-            child: ElevatedButton(
-              onPressed: () {
-                _onLogInButtonClicked();
-              },
-              child: const Text("Log in"),
-              style: ButtonStyle(
-                  backgroundColor:
-                      state.authModel.responseType == AuthResponseType.error
-                          ? MaterialStateProperty.all<Color>(Colors.grey)
-                          : MaterialStateProperty.all<Color>(Colors.green)),
+            Padding(
+              padding: const CustomPadding(),
+              child: ElevatedButton(
+                onPressed: () {
+                  _onLogInButtonClicked();
+                },
+                child: const Text("Log in"),
+                style: ButtonStyle(
+                    backgroundColor:
+                        state.authModel.responseType == AuthResponseType.error
+                            ? MaterialStateProperty.all<Color>(Colors.grey)
+                            : MaterialStateProperty.all<Color>(Colors.green)),
+              ),
             ),
-          ),
-          Padding(
-            child: Text(state.authModel.errorMessage,
-                style: const TextStyle(fontSize: 16)),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          ),
-        ],
-      );
-    });
+            Padding(
+              child: Text(state.authModel.errorMessage,
+                  style: const TextStyle(fontSize: 16)),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

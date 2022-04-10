@@ -64,7 +64,7 @@ class AuthRepository {
     if (!file.existsSync()) {
       file = await file.create();
     }
-    var sink = file.openWrite();
+    final sink = file.openWrite();
     for (var item in _userdataMap.entries) {
       sink.writeln(item.key + " " + item.value);
     }

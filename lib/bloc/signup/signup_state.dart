@@ -16,8 +16,9 @@ class SignupInitial extends SignupState {
 }
 
 class SignupChanged extends SignupState {
-  const SignupChanged(AuthResponseModel authModel)
-      : super(authModel: authModel);
+  const SignupChanged(
+    AuthResponseModel authModel,
+  ) : super(authModel: authModel);
 
   @override
   List<Object> get props => [authModel];

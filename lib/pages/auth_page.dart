@@ -37,20 +37,16 @@ class AuthenticationForm extends StatelessWidget {
   }
 
   void _listener() {
-    String username = usernameTEController.text;
-    String password = passwordTEController.text;
     context.read<AuthBloc>().add(ValidateInput(
-          username: username,
-          password: password,
+          username: usernameTEController.text,
+          password: passwordTEController.text,
         ));
   }
 
   void _onLogInButtonClicked() {
-    String username = usernameTEController.text;
-    String password = passwordTEController.text;
     context.read<AuthBloc>().add(AuthInAccount(
-          username: username,
-          password: password,
+          username: usernameTEController.text,
+          password: passwordTEController.text,
         ));
   }
 
@@ -67,8 +63,10 @@ class AuthenticationForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const Padding(
-              child:
-                  Text("Log in your account: ", style: TextStyle(fontSize: 16)),
+              child: Text(
+                "Log in your account: ",
+                style: TextStyle(fontSize: 16),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             ),
             Padding(
@@ -100,15 +98,18 @@ class AuthenticationForm extends StatelessWidget {
                 },
                 child: const Text("Log in"),
                 style: ButtonStyle(
-                    backgroundColor:
-                        state.authModel.responseType == AuthResponseType.error
-                            ? MaterialStateProperty.all<Color>(Colors.grey)
-                            : MaterialStateProperty.all<Color>(Colors.green)),
+                  backgroundColor:
+                      state.authModel.responseType == AuthResponseType.error
+                          ? MaterialStateProperty.all<Color>(Colors.grey)
+                          : MaterialStateProperty.all<Color>(Colors.green),
+                ),
               ),
             ),
             Padding(
-              child: Text(state.authModel.errorMessage,
-                  style: const TextStyle(fontSize: 16)),
+              child: Text(
+                state.authModel.errorMessage,
+                style: const TextStyle(fontSize: 16),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             ),
           ],

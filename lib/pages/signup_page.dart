@@ -28,10 +28,9 @@ class _SignupPageState extends State<SignupPage> {
 
 class SignupForm extends StatelessWidget {
   final BuildContext context;
-  final TextEditingController usernameTEController = TextEditingController();
-  final TextEditingController passwordTEController = TextEditingController();
-  final TextEditingController passwordConfirmTEController =
-      TextEditingController();
+  final usernameTEController = TextEditingController();
+  final passwordTEController = TextEditingController();
+  final passwordConfirmTEController = TextEditingController();
 
   SignupForm({required this.context, Key? key}) : super(key: key) {
     usernameTEController.addListener(_listener);
@@ -40,23 +39,17 @@ class SignupForm extends StatelessWidget {
   }
 
   void _listener() {
-    String username = usernameTEController.text;
-    String password = passwordTEController.text;
-    String passwordConfirm = passwordConfirmTEController.text;
     context.read<SignupBloc>().add(ValidateAccount(
-        username: username,
-        password: password,
-        confirmPassword: passwordConfirm));
+        username: usernameTEController.text,
+        password: passwordTEController.text,
+        confirmPassword: passwordConfirmTEController.text));
   }
 
   void _onSignUpButtonClicked() {
-    String username = usernameTEController.text;
-    String password = passwordTEController.text;
-    String passwordConfirm = passwordConfirmTEController.text;
     context.read<SignupBloc>().add(SignUpAccount(
-        username: username,
-        password: password,
-        confirmPassword: passwordConfirm));
+        username: usernameTEController.text,
+        password: passwordTEController.text,
+        confirmPassword: passwordConfirmTEController.text));
   }
 
   @override
@@ -64,7 +57,7 @@ class SignupForm extends StatelessWidget {
     return BlocConsumer<SignupBloc, SignupState>(
       listener: (context, state) {
         if (state.authModel.responseType == AuthResponseType.successSigningUp) {
-          Navigator.of(context).pushReplacementNamed("/authentication");
+          Navigator.pushReplacementNamed(context, "/authentication");
         }
       },
       builder: (context, state) {
@@ -72,8 +65,10 @@ class SignupForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const Padding(
-              child: Text("Sign up a new account: ",
-                  style: TextStyle(fontSize: 16)),
+              child: Text(
+                "Sign up a new account: ",
+                style: TextStyle(fontSize: 16),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             ),
             Padding(
@@ -119,15 +114,18 @@ class SignupForm extends StatelessWidget {
                 },
                 child: const Text("Sign up"),
                 style: ButtonStyle(
-                    backgroundColor:
-                        state.authModel.responseType == AuthResponseType.error
-                            ? MaterialStateProperty.all<Color>(Colors.grey)
-                            : MaterialStateProperty.all<Color>(Colors.green)),
+                  backgroundColor:
+                      state.authModel.responseType == AuthResponseType.error
+                          ? MaterialStateProperty.all<Color>(Colors.grey)
+                          : MaterialStateProperty.all<Color>(Colors.green),
+                ),
               ),
             ),
             Padding(
-              child: Text(state.authModel.errorMessage,
-                  style: const TextStyle(fontSize: 16)),
+              child: Text(
+                state.authModel.errorMessage,
+                style: const TextStyle(fontSize: 16),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             ),
           ],

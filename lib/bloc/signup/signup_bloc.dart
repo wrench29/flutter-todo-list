@@ -19,55 +19,71 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     Emitter<SignupState> emitter,
   ) {
     emitter(SignupChanged(
-        _checkUserData(event.username, event.password, event.confirmPassword)));
+      _checkUserData(event.username, event.password, event.confirmPassword),
+    ));
   }
 
   Future<void> _onSignUpAccount(
     SignUpAccount event,
     Emitter<SignupState> emitter,
   ) async {
-    AuthResponseModel responseModel =
-        _checkUserData(event.username, event.password, event.confirmPassword);
+    AuthResponseModel responseModel = _checkUserData(
+      event.username,
+      event.password,
+      event.confirmPassword,
+    );
     if (responseModel.responseType == AuthResponseType.successChecking) {
-      await authRepository.addAccount(event.username,
-          DBCrypt().hashpw(event.password, DBCrypt().gensalt()));
+      await authRepository.addAccount(
+        event.username,
+        DBCrypt().hashpw(event.password, DBCrypt().gensalt()),
+      );
       responseModel = const AuthResponseModel(
-          responseType: AuthResponseType.successSigningUp);
+        responseType: AuthResponseType.successSigningUp,
+      );
     }
     emitter(SignupChanged(responseModel));
   }
 
   AuthResponseModel _checkUserData(
-      String username, String password, String confirmPassword) {
+    String username,
+    String password,
+    String confirmPassword,
+  ) {
     final alphanumeric = RegExp(r'^[a-zA-Z0-9]+$');
     if (username.length < 3 || username.length > 16) {
       return const AuthResponseModel(
-          responseType: AuthResponseType.error,
-          errorMessage: "Username length must be between 3 and 16 characters.");
+        responseType: AuthResponseType.error,
+        errorMessage: "Username length must be between 3 and 16 characters.",
+      );
     }
     if (password.length < 5 || password.length > 16) {
       return const AuthResponseModel(
-          responseType: AuthResponseType.error,
-          errorMessage: "Password length must be between 5 and 16 characters.");
+        responseType: AuthResponseType.error,
+        errorMessage: "Password length must be between 5 and 16 characters.",
+      );
     }
     if (!alphanumeric.hasMatch(username) || !alphanumeric.hasMatch(password)) {
       return const AuthResponseModel(
-          responseType: AuthResponseType.error,
-          errorMessage:
-              "You can use only numbers, capital and/or lowercase latin characters.");
+        responseType: AuthResponseType.error,
+        errorMessage: "You can use only numbers,"
+            "capital and/or lowercase latin characters.",
+      );
     }
     if (password != confirmPassword) {
       return const AuthResponseModel(
-          responseType: AuthResponseType.error,
-          errorMessage: "Passwords are not equal.");
+        responseType: AuthResponseType.error,
+        errorMessage: "Passwords are not equal.",
+      );
     }
     String passwordHash = authRepository.getPasswordHash(username);
     if (passwordHash != "") {
       return const AuthResponseModel(
-          responseType: AuthResponseType.error,
-          errorMessage: "Account with this username already exists.");
+        responseType: AuthResponseType.error,
+        errorMessage: "Account with this username already exists.",
+      );
     }
     return const AuthResponseModel(
-        responseType: AuthResponseType.successChecking);
+      responseType: AuthResponseType.successChecking,
+    );
   }
 }

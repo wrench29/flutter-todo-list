@@ -12,8 +12,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   TodoRepository todoRepository;
 
   CategoryBloc(
-      this.categoryRepository, this.authRepository, this.todoRepository)
-      : super(const CategoryInitial()) {
+    this.categoryRepository,
+    this.authRepository,
+    this.todoRepository,
+  ) : super(const CategoryInitial()) {
     on<AddCategoryPressed>(_onAddCategoryPressed);
     on<RemoveCategoryPressed>(_onRemoveCategoryPressed);
     on<FetchCategories>(_onFetchCategories);
@@ -38,7 +40,8 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     categoryRepository.addCategoryModel(user, event.name, event.color);
     categoryRepository.writeCategoryListToMemory(user);
     emitter(
-        CategoryChanged(categoryRepository.getCategoryModelsList(user), user));
+      CategoryChanged(categoryRepository.getCategoryModelsList(user), user),
+    );
   }
 
   void _onRemoveCategoryPressed(

@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:testproject/bloc/todo/todo_event.dart';
@@ -13,11 +12,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   AuthRepository authRepository;
   CategoryRepository categoryRepository;
 
-  String _searchFilter;
+  String _searchFilter = "";
 
-  TodoBloc(this.todoRepository, this.authRepository, this.categoryRepository)
-      : _searchFilter = "",
-        super(const TodoInitial()) {
+  TodoBloc(
+    this.todoRepository,
+    this.authRepository,
+    this.categoryRepository,
+  ) : super(const TodoInitial()) {
     on<AddTodoPressed>(_onAddTodoPressed);
     on<RemoveTodoPressed>(_onRemoveTodoPressed);
     on<FetchTodos>(_onFetchTodos);
@@ -37,7 +38,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     final todoModelsList = todoRepository.getTodoModelsList(user);
     if (todoModelsList.isEmpty) {
       emitter(TodoChanged(
-          const [], user, categoryRepository.getCategoryModelsList(user)));
+        const [],
+        user,
+        categoryRepository.getCategoryModelsList(user),
+      ));
       return;
     }
     _emitDefault(emitter);
@@ -53,7 +57,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
     final user = authRepository.getCurrentUser();
     todoRepository.addTodoModel(
-        user, TodoModel(todoText: event.text, categoryId: event.categoryId));
+      user,
+      TodoModel(todoText: event.text, categoryId: event.categoryId),
+    );
     todoRepository.writeTodoListToMemory(user);
     _emitDefault(emitter);
   }
@@ -97,7 +103,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   List<TodoModel> _filterTodos(List<TodoModel> list, String searchText) {
     List<TodoModel> newList = [];
 
-    if (searchText == "") {
+    if (searchText.isEmpty) {
       return list;
     }
 
@@ -113,8 +119,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   void _emitDefault(Emitter<TodoState> emitter) {
     final user = authRepository.getCurrentUser();
     emitter(TodoChanged(
-        _filterTodos(todoRepository.getTodoModelsList(user), _searchFilter),
-        user,
-        categoryRepository.getCategoryModelsList(user)));
+      _filterTodos(todoRepository.getTodoModelsList(user), _searchFilter),
+      user,
+      categoryRepository.getCategoryModelsList(user),
+    ));
   }
 }
